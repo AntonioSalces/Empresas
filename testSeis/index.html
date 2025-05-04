@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 3 completo</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f7fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            flex-direction: column;
+        }
+        h1 {
+            color: #333;
+            font-size: 2em;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #quizForm {
+            width: 80%;
+            max-width: 800px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .question p {
+            font-size: 1.2em;
+            color: #444;
+        }
+        .question label {
+            display: block;
+            padding: 8px 0;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+        .question input[type="radio"] {
+            margin-right: 10px;
+        }
+        .correct {
+            color: #28a745;
+        }
+        .incorrect {
+            color: #dc3545;
+        }
+        .response {
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        .btn {
+            padding: 12px 25px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 20px;
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .correct, .incorrect {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        #result button {
+            background-color: #28a745;
+            border-radius: 5px;
+            font-size: 1.1em;
+            margin-top: 15px;
+        }
+        #result button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test de 40 Preguntas</h1>
+
+    <form id="quizForm">
+        <div id="questions"></div>
+        <button type="button" class="btn" onclick="showResults()">Comprobar</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+                const questions = [
+    { 
+        question: "Dada la siguiente fórmula de costes totales. ¿Cuál sería el Coste Marginal?", 
+        answers: ["3", "No se podría calcular, faltan datos", "25450"], 
+        correctAnswer: 0 
+    },
+    { 
+        question: "¿Cuál de los siguientes objetivos es clave en la gestión de inventarios?", 
+        answers: ["Minimizar los costes de mantenimiento de inventarios", "Aprovechar los descuentos por volumen de operaciones", "Maximizar el número de unidades en stock"], 
+        correctAnswer: 0 
+    },
+    { 
+        question: "¿Qué factores modifican la productividad a corto plazo?", 
+        answers: ["Modificar la estructura productiva de la empresa", "Actuar sobre la motivación de los trabajadores", "Incrementar inversión en I+D"], 
+        correctAnswer: 1 
+    },
+    { 
+        question: "¿Cuál es el principal objetivo de la gestión de inventarios?", 
+        answers: ["Mantener el máximo de productos en stock para evitar rupturas de stock", "Tener una gran variedad de productos siempre disponibles", "Regular la disponibilidad de materiales y minimizar el costo de almacenamiento"], 
+        correctAnswer: 2 
+    },
+    { 
+        question: "¿Por qué la productividad se ha estancado en España?", 
+        answers: ["Mejores condiciones laborales y adecuación de puestos de trabajo", "Las ocupaciones de cualificación elemental son menos importantes en la economía española", "Exceso de inversión en propiedades inmobiliarias"], 
+        correctAnswer: 2 
+    },
+    { 
+        question: "¿Qué significa el concepto de 'visión estratégica' en una empresa?", 
+        answers: ["Describir las actividades actuales de la empresa", "Proporcionar una dirección futura para la empresa", "Establecer las normas de conducta para los empleados"], 
+        correctAnswer: 1 
+    },
+    { 
+        question: "La empresa Peluquerías Universitarias S.L. comienza su actividad en el año 2020, para realizar cortes y peinados en las instalaciones de la Escuela para lo que ha elaborado el siguiente plan: \n1. Alquila un local cercano en el Campus por 300 euros al mes donde tienen la sede y el almacén. Para acondicionar el mismo hacen una inversión de 5000 euros que estiman les durará, al menos, 10 años, financiado con un préstamo a largo plazo contratado con BBVA al 10 % \n2. Adquieren secadores de pelo y utensilios de peluquería por 2000 euros con una vida útil de 10 años y un vehículo por 10.000 euros con una vida útil de 10 años \n3. La licencia de apertura es de 500 euros; se hace un plan de amortización en 10 años \n4. Estiman deben tener stock de seguridad de productos para realizar los peinados por un valor de 200 euros. Se negocia el pago a 60 días a los proveedores \n5. Cada peinado supone un gasto de productos de peluquería de 2 euros, electricidad 1 euro, y su precio para el cliente será 20 euros, con un volumen de trabajo estimado de 10 peinados al día por peluquera. En principio contratan 2 peluqueras. El sueldo de las peluqueras es de 1200 euros mes con dos pagas extras. La peluquería estará abierta coincidiendo con el curso lectivo: 30 semanas al año de septiembre a junio, de lunes a viernes (5 días semana) \n6. El recibo de suministro eléctrico es de 100 euros al mes fijos más el consumo que se haga de los peinados, y de teléfono e internet 30 euros \n7. El saldo medio en la cuenta corriente del banco para hacer los pagos corrientes es de 2000 euros \n8. Se dispone de una aplicación informática para reservas de citas, junto con desarrollo de página web que cuesta desarrollar 3000 euros (amortizados en 10 años) y que requiere un mantenimiento de 30 euros al mes. ¿Cuál sería el Coste Total Medio por peinado?", 
+        answers: ["3", "20", "16.95"], 
+        correctAnswer: 2 
+    },
+    { 
+        question: "¿Quién es la persona que fija los objetivos y toma las decisiones estratégicas en una empresa?", 
+        answers: ["El inversor", "El accionista", "El empresario"], 
+        correctAnswer: 2 
+    },
+    { 
+        question: "Cuál sería el punto muerto en unidades monetarias (facturación), del siguiente supuesto: \nEditar y comercializar un libro, que supone los siguientes costes: \nEscritura: 1000 horas \nCorrección Maquetación: 500 euros \nImpresión por ejemplar: 6 euros \nGastos de comercialización publicidad: 300 euros \nGastos de envío por ejemplar: 5 euros \nSi queremos remunerar las horas del escritor a 10 euros la hora y el precio de venta del libro es 20 euros", 
+        answers: ["El punto muerto es de 540 unidades", "Habría que facturar 24.000 euros", "Habría que vender al menos 1000 ejemplares para empezar a recuperar los costes fijos"], 
+        correctAnswer: 1 
+    },
+    { 
+        question: "Según este gráfico de producción y costes. ¿En qué momento se alcanza el umbral de rentabilidad?", 
+        answers: ["Febrero", "Diciembre", "Enero"], 
+        correctAnswer: 2 
+    },
+    { 
+        question: "¿Qué determina el punto muerto en una empresa?", 
+        answers: ["El nivel de producción y ventas en el que los ingresos igualan los costes totales", "El nivel de ventas en el que se logran beneficios mínimos", "El nivel de ventas en el que los ingresos totales superan los costes totales"], 
+        correctAnswer: 0 
+    },
+    { 
+        question: "¿Qué representa el subsistema financiero de una empresa?", 
+        answers: ["La producción de bienes y servicios", "La obtención de fondos para financiar actividades empresariales", "La coordinación de los recursos"], 
+        correctAnswer: 1 
+    },
+    { 
+        question: "El stock de seguridad del papel es de 700 kilos, el precio del kilo es 7.14 euros, se gastan 50 kilos al día y el tiempo que tarda el proveedor en servir es 10 días, calcule el punto de pedido si se sabe que el coste de realizar un pedido es de 200 euros y que el tipo de interés de mercado es el 5 %", 
+        answers: ["El pedido óptimo es el que incluye el stock de seguridad y lo que se consume en el periodo de reposición", "700 kg + 500 kg", "4522 kilos"], 
+        correctAnswer: 0 
+    },
+    { 
+        question: "Limas de Ávila, S.a. es una empresa que fabrica y comercializa baterías eléctricas para patinetes y bicicletas. Sólo fabrica un tipo y sus gastos anuales simplificados son los siguientes:\n\n* Gasto de materia prima: 14 euros por batería fabricado\n* Gasto de energía: 2 euros por batería\n* Gasto de personal de dirección, administración y fabricación 110.000 €.\n* Gasto de fuerza de ventas:\n  - Sueldo fijo 50.000 €\n  - Comisiones: 2 € por batería vendida\n* Amortizaciones fijas: 15.000 €\n* Amortizaciones de la maquinaria: 2 euros por batería\n* Gastos generales fijos: 100.000 euros\n\nTodo el personal de la empresa tiene contrato laboral indefinido. La batería se vende 39 euros cada una. No se tienen en consideración los gastos financieros. Calcula el coste variable por batería de cable producida", 
+        answers: ["16 euros", "20 euros", "14 euros"], 
+        correctAnswer: 2 
+    },
+    { 
+        question: "¿Cuál es la definición de empresario en la actualidad?", 
+        answers: ["Persona propietaria de la empresa", "Persona que dirige la empresa", "Persona que combina la propiedad y la dirección de una empresa"], 
+        correctAnswer: 2 
+    },
+    { 
+        question: "¿Cuál es una de las principales tareas de la dirección estratégica en una empresa?", 
+        answers: ["Aumentar la producción", "Fijación de objetivos", "Contratar proveedores"], 
+        correctAnswer: 1 
+    },
+    { 
+        question: "¿Cómo se calculan los beneficios?", 
+        answers: ["Hay beneficios cuando puedo hacer frente a todos los pagos que se derivan de mi actividad", "La diferencia entre ingresos y gastos de la actividad", "El capital invertido en relación a los ingresos obtenidos"], 
+        correctAnswer: 1 
+    },
+    { 
+        question: "¿Cuál de las siguientes opciones describe una empresa mixta?", 
+        answers: ["Su capital social está participado por el Estado y entidades particulares", "Su capital es exclusivamente privado", "Su capital pertenece completamente al Estado, ya sea a nivel nacional, provincial o municipal"], 
+        correctAnswer: 0 
+    },
+    { 
+        question: "¿Qué se define como 'Visión Empresarial'?", 
+        answers: ["La estrategia o conjunto de estrategias a seguir por la empresa para lograr la máxima eficiencia posible", "Proyección futura que se desea para la empresa", "Consiste en la planificación del futuro de la compañía, basada en datos y estimaciones"], 
+        correctAnswer: 2 
+    },
+    { 
+        question: "¿Qué es el punto de pedido?", 
+        answers: ["El nivel de existencias en el cual se ha de realizar el pedido para reaprovisionar el almacén", "El lugar donde se realizan las entregas del stock", "Momento en que la cantidad de stock es mínima o cero"], 
+        correctAnswer: 0 
+    }
+];
+
+
+
+
+
+
+        function renderQuestions() {
+            const questionContainer = document.getElementById("questions");
+            questions.forEach((question, index) => {
+                const questionElement = document.createElement("div");
+                questionElement.classList.add("question");
+
+                const questionText = document.createElement("p");
+                questionText.innerText = `${index + 1}. ${question.question}`;
+                questionElement.appendChild(questionText);
+
+                question.answers.forEach((answer, i) => {
+                    const label = document.createElement("label");
+                    label.innerHTML = `
+                        <input type="radio" name="q${index}" value="${i}" onclick="checkAnswer(${index}, ${i})">
+                        ${answer}
+                    `;
+                    questionElement.appendChild(label);
+                    questionElement.appendChild(document.createElement("br"));
+                });
+
+                questionElement.appendChild(document.createElement("div"));
+                questionContainer.appendChild(questionElement);
+            });
+        }
+
+        function checkAnswer(questionIndex, selectedValue) {
+            const question = questions[questionIndex];
+            const responseElement = document.createElement("div");
+            const questionElement = document.getElementsByClassName("question")[questionIndex];
+            
+            const feedback = questionElement.getElementsByTagName("div")[0];
+            feedback.innerHTML = ""; // Limpiar feedback anterior
+
+            if (selectedValue === question.correctAnswer) {
+                feedback.classList.add("correct");
+                feedback.innerText = `Correcto: ${question.justification}`;
+            } else {
+                feedback.classList.add("incorrect");
+                feedback.innerText = `Incorrecto. ${question.justification}`;
+            }
+        }
+
+        function showResults() {
+            let score = 0;
+            questions.forEach((question, index) => {
+                const selectedAnswer = document.querySelector(`input[name="q${index}"]:checked`);
+                if (selectedAnswer !== null) {
+                    const answerValue = parseInt(selectedAnswer.value);
+                    if (answerValue === question.correctAnswer) {
+                        score += 0.25;
+                    } else {
+                        score -= 0.25/2;
+                    }
+                }
+            });
+
+            const totalScore = document.createElement("p");
+            totalScore.innerText = `Nota final: ${score.toFixed(2)} / 10`;
+            const button = document.createElement("button");
+            button.classList.add("btn");
+            button.innerText = "Corregir";
+            button.onclick = () => location.reload();
+            document.getElementById("result").appendChild(totalScore);
+            document.getElementById("result").appendChild(button);
+        }
+
+        renderQuestions();
+    </script>
+</body>
+</html>

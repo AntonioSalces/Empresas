@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de 20 Preguntas</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f7fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            flex-direction: column;
+        }
+        h1 {
+            color: #333;
+            font-size: 2em;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #quizForm {
+            width: 80%;
+            max-width: 800px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .question p {
+            font-size: 1.2em;
+            color: #444;
+        }
+        .question label {
+            display: block;
+            padding: 8px 0;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+        .question input[type="radio"] {
+            margin-right: 10px;
+        }
+        .correct {
+            color: #28a745;
+        }
+        .incorrect {
+            color: #dc3545;
+        }
+        .response {
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        .btn {
+            padding: 12px 25px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 20px;
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .correct, .incorrect {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        #result button {
+            background-color: #28a745;
+            border-radius: 5px;
+            font-size: 1.1em;
+            margin-top: 15px;
+        }
+        #result button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test de 20 Preguntas</h1>
+
+    <form id="quizForm">
+        <div id="questions"></div>
+        <button type="button" class="btn" onclick="showResults()">Comprobar</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        const questions = [
+            { question: "¿Cómo se define la empresa en términos clásicos?", answers: ["Como una unidad económica de consumo", "Como una unidad económica de producción", "Como una unidad jurídica autónoma"], correctAnswer: 1, justification: "La empresa clásica se ve como una unidad económica cuya función es la producción y no el consumo." },
+            { question: "¿Qué aspecto de la empresa no se contempla en la definición clásica según Fernández Pirla?", answers: ["El lucro como motivación", "La creación de valor", "La forma jurídica de la empresa"], correctAnswer: 2, justification: "La definición clásica de empresa no abarca su estructura jurídica, sino su actividad económica." },
+            { question: "¿Qué caracteriza la evolución de la empresa en la perspectiva histórica?", answers: ["El cambio en la relación con el entorno", "La transición de ser un ente económico a uno social", "La permanencia de su estructura jurídica"], correctAnswer: 0, justification: "A lo largo de la historia, la empresa ha ido cambiando su enfoque para adaptarse mejor a su entorno social y económico." },
+            { question: "¿Qué elementos componen la estructura básica de una empresa moderna?", answers: ["Solo los recursos humanos y financieros", "Elementos humanos, materiales e inmateriales", "Elementos materiales y jurídicos"], correctAnswer: 1, justification: "Una empresa moderna no solo requiere recursos físicos, sino también recursos humanos y una cultura organizacional adecuada." },
+            { question: "¿Cuál es la función básica de la empresa según la teoría económica moderna?", answers: ["Producir productos y servicios con fines de lucro", "Generar empleo para la sociedad", "Transformar factores de producción en productos"], correctAnswer: 2, justification: "La función fundamental de la empresa es la transformación de los factores de producción en productos y servicios útiles." },
+            { question: "¿Qué define mejor el concepto de empresa como sistema?", answers: ["Una unidad jurídica autónoma", "Un conjunto de elementos independientes", "Un conjunto de partes interrelacionadas con un objetivo común"], correctAnswer: 2, justification: "En el modelo sistémico, todos los elementos dentro de la empresa deben trabajar juntos para alcanzar un objetivo común." },
+            { question: "¿Cuál de los siguientes no es considerado un subsistema en una empresa?", answers: ["Marketing", "Finanzas", "Capital humano"], correctAnswer: 2, justification: "Aunque el capital humano es esencial, no se clasifica como un subsistema en términos organizacionales, a diferencia de marketing o finanzas." },
+            { question: "¿Cómo impacta la incertidumbre empresarial en las decisiones estratégicas?", answers: ["Aumenta la previsibilidad del mercado", "Hace que las decisiones sean más fáciles de tomar", "Incrementa la complejidad en la toma de decisiones"], correctAnswer: 2, justification: "La incertidumbre dificulta la toma de decisiones, ya que los ejecutivos no tienen suficiente información sobre el entorno." },
+            { question: "¿Qué subsistema se ocupa de la organización interna y de los comportamientos dentro de la empresa?", answers: ["Subsistema de producción", "Subsistema de recursos humanos", "Subsistema de marketing"], correctAnswer: 1, justification: "Este subsistema es responsable de la gestión del capital humano y de las relaciones internas dentro de la empresa." },
+            { question: "¿Qué concepto se refiere a la necesidad de que los subsistemas de la empresa trabajen de forma coordinada?", answers: ["Subsistemas independientes", "Interdependencia sistémica", "Redundancia funcional"], correctAnswer: 1, justification: "Los subsistemas de la empresa no operan de manera aislada, sino que deben coordinarse para alcanzar los objetivos organizacionales." },
+            { question: "¿Qué función principal tiene el subsistema de financiación dentro de la empresa?", answers: ["Producir los bienes", "Asegurar la captación de recursos financieros", "Definir la estrategia de marketing"], correctAnswer: 1, justification: "El subsistema financiero se encarga de obtener y gestionar los fondos necesarios para el funcionamiento y crecimiento de la empresa." },
+            { question: "¿Cuál es el riesgo moral asociado a una mala toma de decisiones en la empresa?", answers: ["El riesgo financiero", "El riesgo ético y legal", "El riesgo tecnológico"], correctAnswer: 1, justification: "El riesgo moral se refiere a las malas decisiones éticas o legales que pueden afectar la integridad de la empresa." },
+            { question: "¿Qué dimensiona mejor la relación entre la empresa y el mercado laboral?", answers: ["Dimensión económica", "Dimensión sociocultural", "Dimensión jurídica"], correctAnswer: 0, justification: "La dimensión económica se refiere a cómo las condiciones económicas afectan las decisiones dentro de la empresa y el mercado laboral." },
+            { question: "¿Cuál de las siguientes funciones NO es propia de la dirección estratégica de la empresa?", answers: ["Planificación a largo plazo", "Ejecución de las operaciones diarias", "Control y evaluación de resultados"], correctAnswer: 1, justification: "La dirección estratégica se enfoca en la planificación a largo plazo y en la evaluación de resultados, mientras que la ejecución diaria está a cargo de la gestión operativa." },
+            { question: "¿Cómo se clasifica una empresa según su tamaño en términos de la estructura organizativa?", answers: ["Microempresas, empresas medianas y grandes empresas", "Empresas privadas y públicas", "Empresas nacionales e internacionales"], correctAnswer: 0, justification: "Las empresas se clasifican en función de su tamaño y la complejidad de su estructura organizativa." },
+            { question: "¿Qué dimensión del entorno empresarial aborda las leyes y regulaciones gubernamentales?", answers: ["Dimensión económica", "Dimensión jurídica-legal", "Dimensión sociocultural"], correctAnswer: 1, justification: "La dimensión jurídica-legal se refiere a la regulación que afecta a las operaciones de la empresa, como las leyes laborales, comerciales y fiscales." },
+            { question: "¿Qué elemento de la empresa se relaciona con la relación de autoridad, coordinación y comunicación?", answers: ["Cultura empresarial", "Organización", "Producción"], correctAnswer: 1, justification: "La organización de una empresa está relacionada con la estructura jerárquica, la coordinación entre áreas y la comunicación interna." },
+            { question: "¿Qué subsistema de la empresa se encarga de transformar los insumos en productos?", answers: ["Subsistema de producción", "Subsistema de marketing", "Subsistema de administración"], correctAnswer: 0, justification: "El subsistema de producción se ocupa de transformar los insumos (materias primas) en productos finales o servicios." },
+            { question: "¿Qué característica del entorno empresarial hace que las empresas deban adaptarse constantemente?", answers: ["La incertidumbre ambiental", "La estabilidad del mercado", "La saturación del mercado"], correctAnswer: 0, justification: "Las empresas deben gestionar la incertidumbre ambiental, que implica cambios imprevistos en el mercado y el entorno económico." },
+            { question: "¿Qué define el concepto de empresario según el enfoque clásico?", answers: ["Un capitalista que solo invierte dinero", "Una persona que toma decisiones estratégicas y asume la responsabilidad", "Un trabajador autónomo con recursos limitados"], correctAnswer: 1, justification: "El empresario es aquel que toma decisiones importantes para la empresa y asume la responsabilidad legal y comercial de la misma." }
+        ];
+
+        function renderQuestions() {
+            const questionContainer = document.getElementById("questions");
+            questions.forEach((question, index) => {
+                const questionElement = document.createElement("div");
+                questionElement.classList.add("question");
+
+                const questionText = document.createElement("p");
+                questionText.innerText = `${index + 1}. ${question.question}`;
+                questionElement.appendChild(questionText);
+
+                question.answers.forEach((answer, i) => {
+                    const label = document.createElement("label");
+                    label.innerHTML = `
+                        <input type="radio" name="q${index}" value="${i}" onclick="checkAnswer(${index}, ${i})">
+                        ${answer}
+                    `;
+                    questionElement.appendChild(label);
+                    questionElement.appendChild(document.createElement("br"));
+                });
+
+                questionElement.appendChild(document.createElement("div"));
+                questionContainer.appendChild(questionElement);
+            });
+        }
+
+        function checkAnswer(questionIndex, selectedValue) {
+            const question = questions[questionIndex];
+            const responseElement = document.createElement("div");
+            const questionElement = document.getElementsByClassName("question")[questionIndex];
+            
+            const feedback = questionElement.getElementsByTagName("div")[0];
+            feedback.innerHTML = ""; // Limpiar feedback anterior
+
+            if (selectedValue === question.correctAnswer) {
+                feedback.classList.add("correct");
+                feedback.innerText = `Correcto: ${question.justification}`;
+            } else {
+                feedback.classList.add("incorrect");
+                feedback.innerText = `Incorrecto. ${question.justification}`;
+            }
+        }
+
+        function showResults() {
+            let score = 0;
+            questions.forEach((question, index) => {
+                const selectedAnswer = document.querySelector(`input[name="q${index}"]:checked`);
+                if (selectedAnswer !== null) {
+                    const answerValue = parseInt(selectedAnswer.value);
+                    if (answerValue === question.correctAnswer) {
+                        score += 0.5;
+                    } else {
+                        score -= 0.5/2;
+                    }
+                }
+            });
+
+            const totalScore = document.createElement("p");
+            totalScore.innerText = `Nota final: ${score.toFixed(2)} / 10`;
+            const button = document.createElement("button");
+            button.classList.add("btn");
+            button.innerText = "Corregir";
+            button.onclick = () => location.reload();
+            document.getElementById("result").appendChild(totalScore);
+            document.getElementById("result").appendChild(button);
+        }
+
+        renderQuestions();
+    </script>
+</body>
+</html>
