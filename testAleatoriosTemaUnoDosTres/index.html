@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 3 completo</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f7fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            flex-direction: column;
+        }
+        h1 {
+            color: #333;
+            font-size: 2em;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #quizForm {
+            width: 80%;
+            max-width: 800px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .question p {
+            font-size: 1.2em;
+            color: #444;
+        }
+        .question label {
+            display: block;
+            padding: 8px 0;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+        .question input[type="radio"] {
+            margin-right: 10px;
+        }
+        .correct {
+            color: #28a745;
+        }
+        .incorrect {
+            color: #dc3545;
+        }
+        .response {
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        .btn {
+            padding: 12px 25px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 20px;
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .correct, .incorrect {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        #result button {
+            background-color: #28a745;
+            border-radius: 5px;
+            font-size: 1.1em;
+            margin-top: 15px;
+        }
+        #result button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test de 40 Preguntas</h1>
+
+    <form id="quizForm">
+        <div id="questions"></div>
+        <button type="button" class="btn" onclick="showResults()">Comprobar</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+                const questions = [
+    { 
+        question: "La función de la empresa de crear valor o aumentar la utilidad de los bienes es una característica de:", 
+        answers: ["La unidad económica de consumo", "La unidad técnico-económica de producción", "El subsistema financiero"], 
+        correctAnswer: 1 
+    },
+    { 
+        question: "Un elemento inmaterial de la empresa que se define como el conjunto de valores, creencias y motivaciones que conforman la mentalidad de la empresa y su código de valores ético es:", 
+        answers: ["La imagen pública", "La organización", "La cultura empresarial"], 
+        correctAnswer: 2 
+    },
+    { 
+        question: "Considerando la empresa como un sistema, ¿cuál de las siguientes opciones representa una posible salida (output)?", 
+        answers: ["Materias Primas", "Factores financieros", "Productos terminados (Bienes o Servicios)"], 
+        correctAnswer: 2 
+    },
+    { 
+        question: "La dimensión del Ambiente General que incluye los avances científicos y tecnológicos de una industria determinada y de la sociedad en general se denomina:", 
+        answers: ["Dimensión sociocultural", "Dimensión económica", "Dimensión tecnológica"], 
+        correctAnswer: 2 
+    },
+    { 
+        question: "Verdadero o Falso: Una característica del emprendedor es la aversión total al riesgo y la incertidumbre.", 
+        answers: ["Verdadero", "Falso"], 
+        correctAnswer: 1 
+    },
+    { 
+        question: "La 'Visión Estratégica' de una empresa se diferencia principalmente de la 'Declaración de la Misión' en que:", 
+        answers: ["La visión describe la esfera de acción actual de la empresa (quiénes somos y qué hacemos).", "La visión es un mapa del futuro de la empresa, detallando hacia dónde se debe dirigir.", "La visión tiende a ser más estable en el tiempo que la misión."], 
+        correctAnswer: 1 
+    },
+    { 
+        question: "Verdadero o Falso: Los objetivos estratégicos de una empresa se centran principalmente en indicadores financieros como el crecimiento de las ganancias o el rendimiento sobre la inversión.", 
+        answers: ["Verdadero", "Falso"], 
+        correctAnswer: 1 
+    },
+    { 
+        question: "La estrategia real de una compañía se forma a partir de una mezcla de:", 
+        answers: ["Únicamente acciones deliberadas e intencionadas.", "Reacciones ante desarrollos imprevistos y aprendizaje colectivo.", "Acciones deliberadas e intencionadas (estrategia planeada), reacciones ante desarrollos imprevistos (estrategia reactiva) y aprendizaje colectivo."], 
+        correctAnswer: 2 
+    },
+    { 
+        question: "Según las fuentes, construir una organización capaz de llevar a cabo con éxito la estrategia es un aspecto principal de:", 
+        answers: ["La fijación de objetivos estratégicos.", "La evaluación del desempeño.", "La puesta en práctica y ejecución de la estrategia."], 
+        correctAnswer: 2 
+    },
+    { 
+        question: "Verdadero o Falso: La administración estratégica es un proceso estático que, una vez definido, no requiere ajustes continuos.", 
+        answers: ["Verdadero", "Falso"], 
+        correctAnswer: 1 
+    },
+    { 
+        question: "El enfoque de diseño de la estrategia donde una sola persona (generalmente el director ejecutivo) moldea por sí sola la mayoría de los elementos principales de la estrategia se conoce como:", 
+        answers: ["Enfoque de delegación", "Enfoque del arquitecto Jefe", "Enfoque de colaborador o de equipo"], 
+        correctAnswer: 1 
+    },
+    { 
+        question: "Uno de los objetivos de la dirección de producción, además de minimizar costes y maximizar productividad, es:", 
+        answers: ["Minimizar la calidad", "Aumentar las roturas de stock", "Asegurar la fiabilidad del proceso productivo y atender la demanda"], 
+        correctAnswer: 2 
+    },
+    { 
+        question: "El nivel de existencias en el cual se ha de realizar un pedido para reaprovisionar el almacén, buscando evitar la ruptura de stocks, se denomina:", 
+        answers: ["Stock máximo", "Stock mínimo o de seguridad", "Punto de pedido"], 
+        correctAnswer: 2 
+    },
+    { 
+        question: "Verdadero o Falso: Según la clasificación por la 'Razón de producir', un proceso de producción puede ser 'Por encargo' o 'Para almacén'.", 
+        answers: ["Verdadero", "Falso"], 
+        correctAnswer: 0 
+    },
+    { 
+        question: "Según la clasificación de costes por su vinculación al producto, ¿qué tipo de coste sería el salario del personal de fabricación?", 
+        answers: ["Coste Fijo e Indirecto", "Coste Variable y Directo", "Coste Fijo y Directo"], 
+        correctAnswer: 1 
+    },
+    { 
+        question: "En el análisis del Punto Muerto, la decisión de 'Producir o comprar' un componente es indiferente cuando:", 
+        answers: ["El coste total de producción es mayor que el coste de compra.", "El coste total de producción es menor que el coste de compra.", "El coste total de producción es igual al coste de compra."], 
+        correctAnswer: 2 
+    },
+    { 
+        question: "Verdadero o Falso: La productividad se define como el cociente entre la salida útil y las entradas necesarias para conseguirlas, midiendo si se logra resultados con el menor empleo posible de recursos.", 
+        answers: ["Verdadero", "Falso"], 
+        correctAnswer: 1 
+    },
+    { 
+        question: "¿Cuál de los siguientes NO es un factor que, según las fuentes, disminuye la productividad?", 
+        answers: ["Pérdida de tiempo", "Mejora de métodos de trabajo", "Piezas defectuosas"], 
+        correctAnswer: 1 
+    },
+    { 
+        question: "Según la IV Directiva de la Unión Europea, ¿cuál de los siguientes es un criterio utilizado para medir la dimensión de una empresa?", 
+        answers: ["El número de sucursales", "La antigüedad de la empresa", "El Importe Neto de la Cifra de Negocio"], 
+        correctAnswer: 2 
+    },
+    { 
+        question: "Una de las ventajas de las empresas pequeñas, en comparación con las grandes, es:", 
+        answers: ["Mejor acceso a fuentes de financiación ajenas", "Mayor flexibilidad en su estructura organizativa", "Mayor poder de mercado"], 
+        correctAnswer: 1 
+    }
+];
+
+
+
+
+
+        function renderQuestions() {
+            const questionContainer = document.getElementById("questions");
+            questions.forEach((question, index) => {
+                const questionElement = document.createElement("div");
+                questionElement.classList.add("question");
+
+                const questionText = document.createElement("p");
+                questionText.innerText = `${index + 1}. ${question.question}`;
+                questionElement.appendChild(questionText);
+
+                question.answers.forEach((answer, i) => {
+                    const label = document.createElement("label");
+                    label.innerHTML = `
+                        <input type="radio" name="q${index}" value="${i}" onclick="checkAnswer(${index}, ${i})">
+                        ${answer}
+                    `;
+                    questionElement.appendChild(label);
+                    questionElement.appendChild(document.createElement("br"));
+                });
+
+                questionElement.appendChild(document.createElement("div"));
+                questionContainer.appendChild(questionElement);
+            });
+        }
+
+        function checkAnswer(questionIndex, selectedValue) {
+            const question = questions[questionIndex];
+            const responseElement = document.createElement("div");
+            const questionElement = document.getElementsByClassName("question")[questionIndex];
+            
+            const feedback = questionElement.getElementsByTagName("div")[0];
+            feedback.innerHTML = ""; // Limpiar feedback anterior
+
+            if (selectedValue === question.correctAnswer) {
+                feedback.classList.add("correct");
+                feedback.innerText = `Correcto: ${question.justification}`;
+            } else {
+                feedback.classList.add("incorrect");
+                feedback.innerText = `Incorrecto. ${question.justification}`;
+            }
+        }
+
+        function showResults() {
+            let score = 0;
+            questions.forEach((question, index) => {
+                const selectedAnswer = document.querySelector(`input[name="q${index}"]:checked`);
+                if (selectedAnswer !== null) {
+                    const answerValue = parseInt(selectedAnswer.value);
+                    if (answerValue === question.correctAnswer) {
+                        score += 0.25;
+                    } else {
+                        score -= 0.25/2;
+                    }
+                }
+            });
+
+            const totalScore = document.createElement("p");
+            totalScore.innerText = `Nota final: ${score.toFixed(2)} / 10`;
+            const button = document.createElement("button");
+            button.classList.add("btn");
+            button.innerText = "Corregir";
+            button.onclick = () => location.reload();
+            document.getElementById("result").appendChild(totalScore);
+            document.getElementById("result").appendChild(button);
+        }
+
+        renderQuestions();
+    </script>
+</body>
+</html>
